@@ -1,0 +1,60 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: mqtt-rtk-caster
+  name: mqtt-rtk-caster
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mqtt-rtk-caster
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: mqtt-rtk-caster
+    spec:
+      containers:
+      - image: geerd/mqtt-rtk-caster:0.45-deb
+        imagePullPolicy: IfNotPresent
+        name: mqtt-rtk-caster
+        resources:
+          limits:
+            cpu: 200m
+            memory: 512Mi
+          requests:
+            cpu: 200m
+            memory: 512Mi
+        env:
+          - name: IP_CASTER
+            value: "XXXXXXXXXX"
+          - name: RTCM_PORT
+            value: "2101"
+          - name: MOUNTPOINT
+            value: HELMOND
+          - name: MQTT_USER
+            value: XXXXXXXX
+          - name: MQTT_PASS
+            value: XXXXXXX
+          - name: MQTT_IP
+            value: rabbitmq.broker.svc.cluster.local
+          - name: MQTT_PORT
+            value: "1883"
+          - name: CASTER_USER
+            value: XXXXX
+          - name: CASTER_PASS
+            value: XXXXX
+          - name: PYTHONUNBUFFERED
+            value: "0"
+          - name: DEF_QUADCODE
+            value: "1/2/0/2/0/3/0/2/0/0/2/0/2/0/2/0/0/0/1/1"
+          - name: LOGLEVEL
+            value: "INFO"
+
+
